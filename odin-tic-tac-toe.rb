@@ -10,10 +10,36 @@
 # [O][O][ ]
 # [X][O][ ]
 # [ ][ ][X]
-# Where each spot correspond to a number like on a Numpad                              
+# Where each spot correspond to a number like on a Numpad
 
 class Player
+  def initialize(name)
+    @name = name
+  end
 end
 
 class Board
+  def initialize
+    @board = []
+  end
+
+  def clear_board
+    9.times { @board.push(' ') }
+  end
+
+  def display_board
+    @displayed_board = "[#{@board[0]}], [#{@board[1]}], [#{@board[2]}]\n"\
+                       "[#{@board[3]}], [#{@board[4]}], [#{@board[5]}]\n"\
+                       "[#{@board[6]}], [#{@board[7]}], [#{@board[8]}]"
+    puts @displayed_board
+  end
+
 end
+
+
+player1 = Player.new('Player 1')
+player2 = Player.new('Player 2')
+
+game = Board.new
+game.clear_board
+game.display_board
