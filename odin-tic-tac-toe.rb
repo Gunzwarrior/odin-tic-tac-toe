@@ -23,8 +23,12 @@ class Board
     @board = []
   end
 
-  def clear_board
+  def generate_board
     9.times { @board.push(' ') }
+  end
+
+  def clear_board
+    @board = []
   end
 
   def display_board
@@ -41,5 +45,5 @@ player1 = Player.new('Player 1')
 player2 = Player.new('Player 2')
 
 game = Board.new
-game.clear_board
+game.generate_board
 game.display_board
