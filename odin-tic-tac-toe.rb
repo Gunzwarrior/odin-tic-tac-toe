@@ -13,8 +13,9 @@
 # Where each spot correspond to a number like on a Numpad
 
 class Player
-  def initialize(name)
+  def initialize(name, board)
     @name = name
+    @board = board
   end
 end
 
@@ -38,12 +39,58 @@ class Board
     puts @displayed_board
   end
 
+  def a_number?(string)
+    string.to_i.to_s == string
+  end
+
+  def between_0_9?(string)
+    string.to_i.positive? && string.to_i < 10
+  end
+
+  def valid_input?(spot)
+    if a_number?(spot) && between_0_9?(spot)
+      true
+    else
+      false
+      
+    end
+  end
+
+  def empty?(spot)
+    @board[spot.to_i - 1] == ' '
+  end
+
+  def check_input(spot)
+    if valid_input?(spot) && empty?(spot)
+      update_board(spot)
+      display_board
+    elsif !valid_input?(spot)
+      puts 'Please enter a number between 0 and 9'
+    else
+      puts 'This spot is taken, please enter another'
+    end
+  end
+  
+  def update_board(spot)
+    @board[spot.to_i - 1] = "X"
+  end
+
 end
 
 
-player1 = Player.new('Player 1')
-player2 = Player.new('Player 2')
-
 game = Board.new
+player1 = Player.new('Player 1', game)
+player2 = Player.new('Player 2', game)
+
+
 game.generate_board
+game.display_board
+game.check_input("")
+game.check_input(" ")
+game.check_input("qdf5")
+game.check_input("9")
+game.check_input("10")
+game.check_input("5")
+game.check_input("5")
+game.check_input("0")
 game.display_board
