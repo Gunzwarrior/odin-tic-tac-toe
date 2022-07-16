@@ -17,9 +17,18 @@ class Player
     @name = name
     @board = board
   end
+
+  def play
+    print "#{@name} > "
+    while !@board.made_a_move
+      @board.check_input(gets.chomp)
+    end
+  end
 end
 
 class Board
+  attr_reader :made_a_move
+  
   def initialize
     @board = []
   end
@@ -33,9 +42,9 @@ class Board
   end
 
   def display_board
-    @displayed_board = "[#{@board[0]}], [#{@board[1]}], [#{@board[2]}]\n"\
+    @displayed_board = "[#{@board[6]}], [#{@board[7]}], [#{@board[8]}]\n"\
                        "[#{@board[3]}], [#{@board[4]}], [#{@board[5]}]\n"\
-                       "[#{@board[6]}], [#{@board[7]}], [#{@board[8]}]"
+                       "[#{@board[0]}], [#{@board[1]}], [#{@board[2]}]"
     puts @displayed_board
   end
 
@@ -61,7 +70,9 @@ class Board
   end
 
   def check_input(spot)
+    @made_a_move = false
     if valid_input?(spot) && empty?(spot)
+      @made_a_move = true
       update_board(spot)
       display_board
     elsif !valid_input?(spot)
@@ -94,3 +105,4 @@ game.check_input("5")
 game.check_input("5")
 game.check_input("0")
 game.display_board
+player1.play
