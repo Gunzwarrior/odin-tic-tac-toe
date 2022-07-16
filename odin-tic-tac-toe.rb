@@ -13,15 +13,34 @@
 # Where each spot correspond to a number like on a Numpad
 
 class Player
+@@players = []
+
+
+  def self.players
+    puts @@players
+  end
+
+  def self.engine
+    while true
+      @@players[0].play
+      @@players[1].play
+    end
+  end
+
   def initialize(name, board)
     @name = name
     @board = board
+    @@players.push(self)
   end
 
   def play
-    print "#{@name} > "
-    while !@board.made_a_move
+    @played = false
+    while !@played
+      print "#{@name} > "
       @board.check_input(gets.chomp)
+      if @board.made_a_move
+        @played = true
+      end
     end
   end
 end
@@ -105,4 +124,4 @@ game.check_input("5")
 game.check_input("5")
 game.check_input("0")
 game.display_board
-player1.play
+Player.engine
