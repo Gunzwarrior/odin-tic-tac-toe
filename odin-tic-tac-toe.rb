@@ -11,6 +11,7 @@
 # [X][O][ ]
 # [ ][ ][X]
 # Where each spot correspond to a number like on a Numpad
+# finish game_over and someone_won methods
 
 class Player
 @@players = []
@@ -48,6 +49,14 @@ end
 class Board
   attr_reader :made_a_move
   
+  @@winning_conditions = [@board[0] == @board[1] && @board[0] == @board[2],
+                          @board[3] == @board[4] && @board[3] == @board[5],
+                          @board[6] == @board[7] && @board[6] == @board[8],
+                          @board[0] == @board[3] && @board[0] == @board[6],
+                          @board[1] == @board[4] && @board[1] == @board[7],
+                          @board[2] == @board[5] && @board[2] == @board[8],
+                          @board[0] == @board[4] && @board[0] == @board[8],
+                          @board[6] == @board[4] && @board[6] == @board[2]]
   def initialize
     @board = []
   end
@@ -105,6 +114,32 @@ class Board
     @board[spot.to_i - 1] = "X"
   end
 
+  def full_board?
+    if @board.include?(' ')
+      false
+    else
+      true
+    end
+  end
+
+  def empty_board?
+    test_array = []
+    9.times { test_array.push(' ') }
+    if @board == test_array
+      true
+    else
+      false
+    end
+  end
+
+  def someone_won?
+    if  @board[0] == @board[1] == @board[2] ||
+        ||
+  end
+
+  def game_over?
+  end
+
 end
 
 
@@ -124,4 +159,5 @@ game.check_input("5")
 game.check_input("5")
 game.check_input("0")
 game.display_board
+game.is_over?
 Player.engine
