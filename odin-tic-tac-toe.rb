@@ -48,15 +48,7 @@ end
 
 class Board
   attr_reader :made_a_move
-  
-  @@winning_conditions = [@board[0] == @board[1] && @board[0] == @board[2],
-                          @board[3] == @board[4] && @board[3] == @board[5],
-                          @board[6] == @board[7] && @board[6] == @board[8],
-                          @board[0] == @board[3] && @board[0] == @board[6],
-                          @board[1] == @board[4] && @board[1] == @board[7],
-                          @board[2] == @board[5] && @board[2] == @board[8],
-                          @board[0] == @board[4] && @board[0] == @board[8],
-                          @board[6] == @board[4] && @board[6] == @board[2]]
+
   def initialize
     @board = []
   end
@@ -89,7 +81,6 @@ class Board
       true
     else
       false
-      
     end
   end
 
@@ -132,9 +123,21 @@ class Board
     end
   end
 
+  def winning_conditions
+    @winning_conditions = [@board[0] == @board[1] && @board[0] == @board[2],
+                           @board[3] == @board[4] && @board[3] == @board[5],
+                           @board[6] == @board[7] && @board[6] == @board[8],
+                           @board[0] == @board[3] && @board[0] == @board[6],
+                           @board[1] == @board[4] && @board[1] == @board[7],
+                           @board[2] == @board[5] && @board[2] == @board[8],
+                           @board[0] == @board[4] && @board[0] == @board[8],
+                           @board[6] == @board[4] && @board[6] == @board[2]]
+  end
+
   def someone_won?
-    if  @board[0] == @board[1] == @board[2] ||
-        ||
+    return if empty_board?
+
+    winning_conditions.each { |i| winning_conditions[i] ? true : false }
   end
 
   def game_over?
@@ -159,5 +162,4 @@ game.check_input("5")
 game.check_input("5")
 game.check_input("0")
 game.display_board
-game.is_over?
-Player.engine
+game.someone_won?
