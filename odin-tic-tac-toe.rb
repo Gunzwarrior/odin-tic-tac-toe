@@ -14,31 +14,19 @@
 # finish game_over and someone_won methods
 
 class Player
-@@players = []
 
-
-  def self.players
-    puts @@players
-  end
-
-  def self.engine
-    while true
-      @@players[0].play
-      @@players[1].play
-    end
-  end
-
-  def initialize(name, board)
+  def initialize(name, board, mark)
     @name = name
     @board = board
-    @@players.push(self)
+    @mark = mark
+
   end
 
   def play
     @played = false
     while !@played
       print "#{@name} > "
-      @board.check_input(gets.chomp)
+      @board.check_input(gets.chomp, @mark)
       if @board.made_a_move
         @played = true
       end
@@ -51,7 +39,43 @@ class Board
 
   def initialize
     @board = []
+    generate_board
   end
+
+  def game_over?
+    if someone_won?
+      return true
+    end
+    if full_board?
+      return true
+    end
+  end
+
+  def check_input(spot, mark)
+    @made_a_move = false
+    if valid_input?(spot) && empty?(spot)
+      @made_a_move = true
+      update_board(spot, mark)
+      display_board
+    elsif !valid_input?(spot)
+      puts 'Please enter a number between 1 and 9'
+    else
+      puts 'This spot is taken, please enter another'
+    end
+  end
+
+  def someone_won?
+    return if empty_board?
+
+    winning_conditions.each do |condition|
+      if condition
+        return true
+      end
+    end
+      return false
+  end
+
+  private
 
   def generate_board
     9.times { @board.push(' ') }
@@ -88,29 +112,8 @@ class Board
     @board[spot.to_i - 1] == ' '
   end
 
-  def check_input(spot)
-    @made_a_move = false
-    if valid_input?(spot) && empty?(spot)
-      @made_a_move = true
-      update_board(spot)
-      display_board
-    elsif !valid_input?(spot)
-      puts 'Please enter a number between 0 and 9'
-    else
-      puts 'This spot is taken, please enter another'
-    end
-  end
-  
-  def update_board(spot)
-    @board[spot.to_i - 1] = "X"
-  end
-
-  def full_board?
-    if @board.include?(' ')
-      false
-    else
-      true
-    end
+  def update_board(spot, mark)
+    @board[spot.to_i - 1] = mark
   end
 
   def empty_board?
@@ -124,42 +127,67 @@ class Board
   end
 
   def winning_conditions
-    @winning_conditions = [@board[0] == @board[1] && @board[0] == @board[2],
-                           @board[3] == @board[4] && @board[3] == @board[5],
-                           @board[6] == @board[7] && @board[6] == @board[8],
-                           @board[0] == @board[3] && @board[0] == @board[6],
-                           @board[1] == @board[4] && @board[1] == @board[7],
-                           @board[2] == @board[5] && @board[2] == @board[8],
-                           @board[0] == @board[4] && @board[0] == @board[8],
-                           @board[6] == @board[4] && @board[6] == @board[2]]
+    @winning_conditions = [@board[0] == @board[1] && @board[0] == @board[2] && @board[0] != ' ',
+                           @board[3] == @board[4] && @board[3] == @board[5] && @board[3] != ' ',
+                           @board[6] == @board[7] && @board[6] == @board[8] && @board[6] != ' ',
+                           @board[0] == @board[3] && @board[0] == @board[6] && @board[0] != ' ',
+                           @board[1] == @board[4] && @board[1] == @board[7] && @board[1] != ' ',
+                           @board[2] == @board[5] && @board[2] == @board[8] && @board[2] != ' ',
+                           @board[0] == @board[4] && @board[0] == @board[8] && @board[0] != ' ',
+                           @board[6] == @board[4] && @board[6] == @board[2] && @board[6] != ' ']
   end
 
-  def someone_won?
-    return if empty_board?
 
-    winning_conditions.each { |i| winning_conditions[i] ? true : false }
-  end
-
-  def game_over?
+  def full_board?
+    return true unless @board.include? (' ')
   end
 
 end
 
+class Engine
+
+private
+
+  def initialize(player1, player2, board)
+    @player1 = player1
+    @player2 = player2
+    @board = board
+    run_game
+  end
+
+  def run_game
+    until @board.game_over?
+    ending = 0
+      @player1.play
+        if @board.game_over? && @board.someone_won?
+          ending = 1
+          break
+        elsif @board.game_over?
+          break
+        end
+      @player2.play
+      if @board.game_over?
+        ending = 2
+      end
+    end
+    result(ending)
+  end
+
+  def result(code)
+    if code == 1
+      puts 'Player 1 won'
+    elsif code == 2
+      puts 'Player 2 won'
+    else
+      puts "Draw"
+    end
+  end
+
+
+end
 
 game = Board.new
-player1 = Player.new('Player 1', game)
-player2 = Player.new('Player 2', game)
+player1 = Player.new('Player 1', game, 'X')
+player2 = Player.new('Player 2', game, 'O')
+Engine.new(player1, player2, game)
 
-
-game.generate_board
-game.display_board
-game.check_input("")
-game.check_input(" ")
-game.check_input("qdf5")
-game.check_input("9")
-game.check_input("10")
-game.check_input("5")
-game.check_input("5")
-game.check_input("0")
-game.display_board
-game.someone_won?
