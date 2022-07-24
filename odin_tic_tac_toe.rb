@@ -13,9 +13,7 @@ class Player
     until @played
       print "#{@name} > "
       @board.check_input(gets.chomp, @mark)
-      if @board.made_a_move
-        @played = true
-      end
+      @played = true if @board.made_a_move
     end
   end
 end
@@ -30,12 +28,8 @@ class Board
   end
 
   def game_over?
-    if someone_won?
-      return true
-    end
-    if full_board?
-      return true
-    end
+    return true if someone_won?
+    return true if full_board?
   end
 
   def check_input(spot, mark)
@@ -55,11 +49,9 @@ class Board
     return if empty_board?
 
     winning_conditions.each do |condition|
-      if condition
-        return true
-      end
+      return true if condition
     end
-      return false
+    false
   end
 
   private
@@ -147,17 +139,16 @@ class Engine
         break
       end
       @player2.play
-      if @board.game_over?
-        ending = 2
-      end
+      ending = 2 if @board.game_over?
     end
     result(ending)
   end
 
   def result(code)
-    if code == 1
+    case code
+    when 1
       puts 'Player 1 won'
-    elsif code == 2
+    when 2
       puts 'Player 2 won'
     else
       puts 'Draw'
