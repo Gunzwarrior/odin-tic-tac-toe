@@ -1,30 +1,16 @@
-# There must be only 2 classes : Player and Board
-# Player 1 and Player 2 are instances of Player
-# At the beginning of the game an instance of the board is created and played on
-# Board has methods to display the current state of the board, check if a move done
-# by an instance of the Player class is valid, modifying it's state with the move
-# of the player (could be 2 methods : valid number, available spot), checking 
-# winning condition, declaring a winner
-# player 1 plays with X, player 2 with O
-# Board is displayed like this :
-# [O][O][ ]
-# [X][O][ ]
-# [ ][ ][X]
-# Where each spot correspond to a number like on a Numpad
-# finish game_over and someone_won methods
+# frozen_string_literal: true
 
+# Does the human part
 class Player
-
   def initialize(name, board, mark)
     @name = name
     @board = board
     @mark = mark
-
   end
 
   def play
     @played = false
-    while !@played
+    until @played
       print "#{@name} > "
       @board.check_input(gets.chomp, @mark)
       if @board.made_a_move
@@ -34,6 +20,7 @@ class Player
   end
 end
 
+# Does the gaming part
 class Board
   attr_reader :made_a_move
 
@@ -119,11 +106,7 @@ class Board
   def empty_board?
     test_array = []
     9.times { test_array.push(' ') }
-    if @board == test_array
-      true
-    else
-      false
-    end
+    @board == test_array
   end
 
   def winning_conditions
@@ -137,16 +120,14 @@ class Board
                            @board[6] == @board[4] && @board[6] == @board[2] && @board[6] != ' ']
   end
 
-
   def full_board?
-    return true unless @board.include? (' ')
+    return true unless @board.include?(' ')
   end
-
 end
 
+# Put everything together
 class Engine
-
-private
+  private
 
   def initialize(player1, player2, board)
     @player1 = player1
@@ -157,14 +138,14 @@ private
 
   def run_game
     until @board.game_over?
-    ending = 0
+      ending = 0
       @player1.play
-        if @board.game_over? && @board.someone_won?
-          ending = 1
-          break
-        elsif @board.game_over?
-          break
-        end
+      if @board.game_over? && @board.someone_won?
+        ending = 1
+        break
+      elsif @board.game_over?
+        break
+      end
       @player2.play
       if @board.game_over?
         ending = 2
@@ -179,15 +160,12 @@ private
     elsif code == 2
       puts 'Player 2 won'
     else
-      puts "Draw"
+      puts 'Draw'
     end
   end
-
-
 end
 
 game = Board.new
 player1 = Player.new('Player 1', game, 'X')
 player2 = Player.new('Player 2', game, 'O')
 Engine.new(player1, player2, game)
-
