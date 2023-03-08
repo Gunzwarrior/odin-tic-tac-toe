@@ -156,7 +156,7 @@ class Engine
   end
 end
 
-game = Board.new
-player1 = Player.new('Player 1', game, 'X')
-player2 = Player.new('Player 2', game, 'O')
-Engine.new(player1, player2, game)
+#game = Board.new
+#player1 = Player.new('Player 1', game, 'X')
+#player2 = Player.new('Player 2', game, 'O')
+#Engine.new(player1, player2, game)
